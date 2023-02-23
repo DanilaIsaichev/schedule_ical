@@ -26,6 +26,113 @@ type Event struct {
 	Alarm    int
 }
 
+func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
+
+	var err error
+
+	if lesson_number == 1 {
+
+		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 8:30:00")
+		if err != nil {
+			return err
+		}
+
+		ev.End, err = time.Parse("2006-01-02 15:04:05", date_string+" 9:15:00")
+		if err != nil {
+			return err
+		}
+
+	} else if lesson_number == 2 {
+
+		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 9:30:00")
+		if err != nil {
+			return err
+		}
+
+		ev.End, err = time.Parse("2006-01-02 15:04:05", date_string+" 10:15:00")
+		if err != nil {
+			return err
+		}
+
+	} else if lesson_number == 3 {
+
+		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 10:30:00")
+		if err != nil {
+			return err
+		}
+
+		ev.End, err = time.Parse("2006-01-02 15:04:05", date_string+" 11:15:00")
+		if err != nil {
+			return err
+		}
+
+	} else if lesson_number == 4 {
+
+		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 11:30:00")
+		if err != nil {
+			return err
+		}
+
+		ev.End, err = time.Parse("2006-01-02 15:04:05", date_string+" 12:15:00")
+		if err != nil {
+			return err
+		}
+
+	} else if lesson_number == 5 {
+
+		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 12:30:00")
+		if err != nil {
+			return err
+		}
+
+		ev.End, err = time.Parse("2006-01-02 15:04:05", date_string+" 13:15:00")
+		if err != nil {
+			return err
+		}
+
+	} else if lesson_number == 6 {
+
+		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 13:30:00")
+		if err != nil {
+			return err
+		}
+
+		ev.End, err = time.Parse("2006-01-02 15:04:05", date_string+" 14:15:00")
+		if err != nil {
+			return err
+		}
+
+	} else if lesson_number == 7 {
+
+		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 14:30:00")
+		if err != nil {
+			return err
+		}
+
+		ev.End, err = time.Parse("2006-01-02 15:04:05", date_string+" 15:15:00")
+		if err != nil {
+			return err
+		}
+
+	} else if lesson_number == 8 {
+
+		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 15:30:00")
+		if err != nil {
+			return err
+		}
+
+		ev.End, err = time.Parse("2006-01-02 15:04:05", date_string+" 16:15:00")
+		if err != nil {
+			return err
+		}
+
+	} else {
+		return errors.New("wrong lesson's number")
+	}
+
+	return nil
+}
+
 type Events []Event
 
 func (evs *Events) remove_duplicates() {
