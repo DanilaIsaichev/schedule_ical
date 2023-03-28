@@ -16,7 +16,7 @@ type Calendar struct {
 	Events Events
 }
 
-// Структура события
+// Структура события урока
 type Event struct {
 	Start    time.Time
 	End      time.Time
@@ -25,12 +25,17 @@ type Event struct {
 	Alarm    int
 }
 
+/*
+Функция, определяющая время начала и окончания для каждого урока
+
+	ВАЖНО: на данный момент время начала и окончания указаны вручную в коде
+*/
 func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 
 	var err error
 
-	if lesson_number == 1 {
-
+	switch lesson_number {
+	case 1:
 		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 8:30:00")
 		if err != nil {
 			return err
@@ -41,8 +46,7 @@ func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 			return err
 		}
 
-	} else if lesson_number == 2 {
-
+	case 2:
 		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 9:30:00")
 		if err != nil {
 			return err
@@ -53,8 +57,7 @@ func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 			return err
 		}
 
-	} else if lesson_number == 3 {
-
+	case 3:
 		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 10:30:00")
 		if err != nil {
 			return err
@@ -65,8 +68,7 @@ func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 			return err
 		}
 
-	} else if lesson_number == 4 {
-
+	case 4:
 		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 11:30:00")
 		if err != nil {
 			return err
@@ -77,8 +79,7 @@ func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 			return err
 		}
 
-	} else if lesson_number == 5 {
-
+	case 5:
 		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 12:30:00")
 		if err != nil {
 			return err
@@ -89,8 +90,7 @@ func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 			return err
 		}
 
-	} else if lesson_number == 6 {
-
+	case 6:
 		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 13:30:00")
 		if err != nil {
 			return err
@@ -101,8 +101,7 @@ func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 			return err
 		}
 
-	} else if lesson_number == 7 {
-
+	case 7:
 		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 14:30:00")
 		if err != nil {
 			return err
@@ -113,8 +112,7 @@ func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 			return err
 		}
 
-	} else if lesson_number == 8 {
-
+	case 8:
 		ev.Start, err = time.Parse("2006-01-02 15:04:05", date_string+" 15:30:00")
 		if err != nil {
 			return err
@@ -125,8 +123,9 @@ func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 			return err
 		}
 
-	} else {
+	default:
 		return errors.New("wrong lesson's number")
+
 	}
 
 	return nil
@@ -134,6 +133,11 @@ func (ev *Event) Set_datetime(date_string string, lesson_number int) error {
 
 type Events []Event
 
+/*
+Функция, удаляющая более события с одинаковым временем начала и окончания
+
+	Предназначена для удаления более ранней версии события при редактировании календаря
+*/
 func (evs *Events) remove_duplicates() {
 
 	if len(*evs) >= 2 {
