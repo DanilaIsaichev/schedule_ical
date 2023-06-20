@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -169,7 +170,7 @@ func (evs *Events) remove_duplicates() {
 // Функция, генерирующая текст события из структуры
 func Generate_event(event_struct Event) string {
 
-	return fmt.Sprint(`BEGIN:VEVENT
+	input := fmt.Sprint(`BEGIN:VEVENT
 DTSTAMP:`, time.Now().Format("20060201T150405"), `
 UID:`, strings.ToUpper(uuid.New().String()), `
 DTSTART;TZID=Europe/Moscow:`, event_struct.Start.Format("20060201T150405"), `
@@ -183,6 +184,10 @@ TRIGGER:-PT`, math.Abs(float64(event_struct.Alarm)), `M
 END:VALARM
 END:VEVENT`)
 
+	re := regexp.MustCompile("\r\n")
+	input = re.ReplaceAllString(input, "\n")
+
+	return input
 }
 
 // Функция, генерирующая ical файл
@@ -273,6 +278,9 @@ END:VCALENDAR`
 			return err
 		}
 		defer file.Close()
+
+		re := regexp.MustCompile("\r\n")
+		calendar_str = re.ReplaceAllString(calendar_str, "\n")
 
 		_, err = file.WriteString(calendar_str)
 		if err != nil {
