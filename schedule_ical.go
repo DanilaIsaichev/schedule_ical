@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"regexp"
 	"strings"
 	"time"
 
@@ -170,24 +169,20 @@ func (evs *Events) remove_duplicates() {
 // Функция, генерирующая текст события из структуры
 func Generate_event(event_struct Event) string {
 
-	input := fmt.Sprint(`BEGIN:VEVENT
-DTSTAMP:`, time.Now().Format("20060201T150405"), `
-UID:`, strings.ToUpper(uuid.New().String()), `
-DTSTART;TZID=Europe/Moscow:`, event_struct.Start.Format("20060201T150405"), `
-DTEND;TZID=Europe/Moscow:`, event_struct.End.Format("20060201T150405"), `
-SUMMARY:`, event_struct.Summary, `
-LOCATION:`, event_struct.Location, `
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:`, event_struct.Summary, ` - `, event_struct.Location, `
-TRIGGER:-PT`, math.Abs(float64(event_struct.Alarm)), `M
-END:VALARM
-END:VEVENT`)
+	return fmt.Sprint("BEGIN:VEVENT\r\n",
+		"DTSTAMP:", time.Now().Format("20060201T150405"), "\r\n",
+		"UID:", strings.ToUpper(uuid.New().String()), "\r\n",
+		"DTSTART;TZID=Europe/Moscow:", event_struct.Start.Format("20060201T150405"), "\r\n",
+		"DTEND;TZID=Europe/Moscow:", event_struct.End.Format("20060201T150405"), "\r\n",
+		"SUMMARY:", event_struct.Summary, "\r\n",
+		"LOCATION:", event_struct.Location, "\r\n",
+		"BEGIN:VALARM\r\n",
+		"ACTION:DISPLAY\r\n",
+		"DESCRIPTION:", event_struct.Summary, " - ", event_struct.Location, "\r\n",
+		"TRIGGER:-PT", math.Abs(float64(event_struct.Alarm)), "M\r\n",
+		"END:VALARM\r\n",
+		"END:VEVENT\r\n")
 
-	re := regexp.MustCompile("\r\n")
-	input = re.ReplaceAllString(input, "\n")
-
-	return input
 }
 
 // Функция, генерирующая ical файл
@@ -245,20 +240,20 @@ func Make_calendar(cal Calendar, directory string) error {
 
 		}
 
-		calendar_str := `BEGIN:VCALENDAR
-PRODID:SCHOOL80-SCHEDULER
-NAME:` + cal.Name + `
-VERSION:2.0
-CALSCALE:GREGORIAN
-BEGIN:VTIMEZONE
-TZID:Europe/Moscow
-TZURL:http://tzurl.org/zoneinfo-outlook/Europe/Moscow
-X-LIC-LOCATION:Europe/Moscow
-BEGIN:STANDARD
-TZNAME:MSK
-TZOFFSETFROM:+0300
-TZOFFSETTO:+0300
-DTSTART:19700101T000000`
+		calendar_str := "BEGIN:VCALENDAR\r\n" +
+			"PRODID:SCHOOL80-SCHEDULER\r\n" +
+			"NAME:" + cal.Name + "\r\n" +
+			"VERSION:2.0\r\n" +
+			"CALSCALE:GREGORIAN\r\n" +
+			"BEGIN:VTIMEZONE\r\n" +
+			"TZID:Europe/Moscow\r\n" +
+			"TZURL:http://tzurl.org/zoneinfo-outlook/Europe/Moscow\r\n" +
+			"X-LIC-LOCATION:Europe/Moscow\r\n" +
+			"BEGIN:STANDARD\r\n" +
+			"TZNAME:MSK\r\n" +
+			"TZOFFSETFROM:+0300\r\n" +
+			"TZOFFSETTO:+0300\r\n" +
+			"DTSTART:19700101T000000\r\n"
 
 		// Если в структуре календаря есть события - добавлем в файл
 		if len(cal.Events) != 0 {
@@ -268,19 +263,15 @@ DTSTART:19700101T000000`
 			}
 		}
 
-		calendar_str += `
-END:STANDARD
-END:VTIMEZONE
-END:VCALENDAR`
+		calendar_str += "END:STANDARD\r\n" +
+			"END:VTIMEZONE\r\n" +
+			"END:VCALENDAR\r\n"
 
 		file, err := os.OpenFile(directory, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 		if err != nil {
 			return err
 		}
 		defer file.Close()
-
-		re := regexp.MustCompile("\r\n")
-		calendar_str = re.ReplaceAllString(calendar_str, "\n")
 
 		_, err = file.WriteString(calendar_str)
 		if err != nil {

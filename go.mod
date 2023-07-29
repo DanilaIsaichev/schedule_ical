@@ -1,4 +1,3 @@
-
 module github.com/danilaisaichev/schedule_ical
 
 go 1.20
